@@ -3,12 +3,14 @@
 # dependencies
 node_modules
 package-lock.json
+platforms
+plugins
 
 # testing
 coverage
 
 # production
-build
+www
 
 # misc
 .DS_Store

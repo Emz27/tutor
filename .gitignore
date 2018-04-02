@@ -5,6 +5,7 @@ node_modules
 package-lock.json
 platforms
 plugins
+yarn.lock.lock
 
 # testing
 coverage

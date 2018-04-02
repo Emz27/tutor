@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {BrowserRouter as Router} from 'react-router-dom';
+import {HashRouter as Router} from 'react-router-dom';
 
 // Styles
 // Import Font Awesome Icons Set
@@ -13,6 +13,7 @@ import '../scss/style.scss';
 import '../scss/core/_dropdown-menu-right.scss';
 
 import * as firebase from 'firebase';
+import 'firebase/firestore';
 
 import {Portal} from './Portal.js';
 
@@ -31,25 +32,30 @@ firebase.initializeApp(config);
 
 firebase.auth().onAuthStateChanged(function(user) {
 
-  var userEmail = firebase.auth().currentUser;
+  var user = firebase.auth().currentUser;
   var userRecord = {};
-  if (userEmail) {
+  if (user) {
+    console.log(user.email);
+    setTimeout(()=>firebase.auth().signOut(),5000);
 
+    firebase.firestore().collection('users').where('email', '==', user.email).get().then(function(querySnapshot) {
+      querySnapshot.forEach((doc)=>{
+        userRecord = {...doc.data()};
+      });
 
-    firebase.firestore().collection('users').where('email', '==', userEmail).get().then(function(querySnapshot) {
-      userRecord = {...querySnapshot[0].data()};
       ReactDOM.render(
         <Router>
-          <Portal userRecord={userRecord}/>
+          <Portal user={userRecord}/>
         </Router>
         ,document.getElementById('root'));
 
     });
+    // setTimeout(firebase.auth().signOut,5000);
   }
   else {
     ReactDOM.render(
       <Router>
-        <Portal userRecord={userRecord} />
+        <Portal user={userRecord} />
       </Router>
       ,document.getElementById('root'));
   }

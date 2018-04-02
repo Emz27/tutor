@@ -11,16 +11,18 @@ import RegisterPage from './RegisterPage.js';
 class Portal extends React.Component{
 
   render(){
-    if(this.props.userRecord.email){
-      if(this.props.userRecord.type === 'Tutor'){
+    if(this.props.user.email){
+      if(this.props.user.type === 'Tutor'){
         return (
           <div>
+            Logged in as Tutor
           </div>
         );
       }
-      else if(this.props.userRecord.type === 'Student'){
+      else if(this.props.user.type === 'Student'){
         return (
           <div>
+            Logged in as Student
           </div>
         );
       }

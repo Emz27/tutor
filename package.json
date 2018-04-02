@@ -5,7 +5,6 @@
   "description": "Tutor Finder Application for our thesis",
   "author": "Emz",
   "private": true,
-
   "cordova": {
     "platforms": [
       "browser"
@@ -57,17 +56,6 @@
   "dependencies": {
     "bootstrap": "4.0.0-beta.2",
     "chart.js": "2.7.1",
-    "firebase": "^4.12.1",
-    "font-awesome": "4.7.0",
-    "history": "4.7.2",
-    "react": "16.1.1",
-    "react-chartjs-2": "2.6.4",
-    "react-dom": "16.1.1",
-    "react-router-dom": "4.2.2",
-    "react-transition-group": "2.2.1",
-    "reactstrap": "5.0.0-alpha.4",
-    "simple-line-icons": "2.4.1",
-
     "cordova-android": "^6.3.0",
     "cordova-browser": "~5.0.1",
     "cordova-plugin-background-mode": "^0.7.2",
@@ -85,7 +73,18 @@
     "cordova-plugin-statusbar": "~2.3.0",
     "cordova-plugin-vibration": "~2.1.5",
     "cordova-plugin-whitelist": "~1.3.3",
-    "phonegap-plugin-push": "^2.1.2"
+    "firebase": "^4.12.1",
+    "font-awesome": "4.7.0",
+    "history": "4.7.2",
+    "phonegap-plugin-push": "^2.1.2",
+    "react": "16.0.0",
+    "react-chartjs-2": "2.6.4",
+    "react-dom": "16.0.0",
+    "react-places-autocomplete": "^6.1.3",
+    "react-router-dom": "4.2.2",
+    "react-transition-group": "2.2.1",
+    "reactstrap": "^5.0.0-beta.3",
+    "simple-line-icons": "2.4.1"
   },
   "scripts": {
     "dev": "webpack -d --progress --watch --profile --json > compilation-stats.json --env.dev",

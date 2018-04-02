@@ -1,12 +1,20 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import {
   Nav,
-  NavItem,
-  NavbarToggler,
   NavbarBrand,
+  NavbarToggler,
+  NavItem,
+  NavLink,
+  Badge
 } from 'reactstrap';
+import HeaderDropdown from './HeaderDropdown';
 
 class Header extends Component {
+
+  constructor(props) {
+    super(props);
+  }
 
   sidebarToggle(e) {
     e.preventDefault();
@@ -34,10 +42,13 @@ class Header extends Component {
         <NavbarToggler className="d-lg-none" onClick={this.mobileSidebarToggle}>
           <span className="navbar-toggler-icon"></span>
         </NavbarToggler>
-        <NavbarBrand href="#"></NavbarBrand>
-        <NavbarToggler className="d-md-down-none mr-auto" onClick={this.sidebarToggle}>
+        {/*<NavbarBrand href="#"></NavbarBrand>*/}
+        <NavbarToggler className="d-md-down-none" onClick={this.sidebarToggle}>
           <span className="navbar-toggler-icon"></span>
         </NavbarToggler>
+        <Nav className="ml-auto" navbar>
+          <HeaderDropdown user={this.props.user}/>
+        </Nav>
         <NavbarToggler className="d-md-down-none" onClick={this.asideToggle}>
           <span className="navbar-toggler-icon"></span>
         </NavbarToggler>

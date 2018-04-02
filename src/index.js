@@ -32,25 +32,25 @@ firebase.initializeApp(config);
 
 firebase.auth().onAuthStateChanged(function(user) {
 
-  var user = firebase.auth().currentUser;
   var userRecord = {};
   if (user) {
     console.log(user.email);
-    setTimeout(()=>firebase.auth().signOut(),5000);
 
-    firebase.firestore().collection('users').where('email', '==', user.email).get().then(function(querySnapshot) {
-      querySnapshot.forEach((doc)=>{
+    firebase.firestore().collection('users').doc(user.uid).get().then(function(doc) {
+      if (doc.exists) {
         userRecord = {...doc.data()};
-      });
-
-      ReactDOM.render(
-        <Router>
-          <Portal user={userRecord}/>
-        </Router>
-        ,document.getElementById('root'));
-
+        ReactDOM.render(
+          <Router>
+            <Portal user={userRecord}/>
+          </Router>
+          ,document.getElementById('root'));
+      } else {
+        console.log('No such document!');
+      }
+    }).catch(function(error) {
+      console.log('Error getting document:', error);
     });
-    // setTimeout(firebase.auth().signOut,5000);
+
   }
   else {
     ReactDOM.render(

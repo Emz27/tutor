@@ -90,7 +90,7 @@ class RegisterPage extends Component {
     if(!s.confirmPassword) error.confirmPasswordError = 'Fill the confirm password field';
     if(!s.firstname) error.firstnameError = 'Fill the firstname field';
     if(!s.lastname) error.lastnameError = 'Fill the lastname field';
-    if(!s.address) error.addressError = 'Fill the lastname field';
+    if(!s.address) error.addressError = 'Fill the Address field';
     if(!s.type) error.typeError = 'Fill the user type field';
 
     if(s.emailError||s.passwordError||s.confirmPasswordError||s.firstnameError
@@ -109,7 +109,7 @@ class RegisterPage extends Component {
         });
     }
   }
-  registerUserData(){
+  registerUserData(uid){
     var userData = {
       type: this.state.type,
       email: this.state.email,
@@ -118,9 +118,9 @@ class RegisterPage extends Component {
       firstname: this.state.firstname,
       lastname: this.state.lastname
     };
-    this.firebase.firestore().collection('users').add(userData)
+    this.firebase.firestore().collection('users').doc(uid).set(userData)
     .then(function(docRef) {
-      console.log('Document written with ID: ', docRef.id);
+      console.log('Document successfully written!');
     })
     .catch(function(error) {
       console.error('Error adding document: ', error);
@@ -132,7 +132,7 @@ class RegisterPage extends Component {
     this.firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
     .then((data)=>{
       console.log('createuser resolved');
-      this.registerUserData();
+      this.registerUserData(firebase.auth().currentUser.uid);
     })
     .catch((error)=> {
       var errorCode = error.code;
@@ -241,7 +241,7 @@ class RegisterPage extends Component {
                       <Label for="exampleEmail">Lastname</Label>
 
 
-                      <Input invalid={(this.state.lastnameError)?true:false} type="text" placeholder="Firstname"
+                      <Input invalid={(this.state.lastnameError)?true:false} type="text" placeholder="Lastname"
                         value={this.state.lastname}
                         onChange={this.handleLastnameChange}/>
                       <FormFeedback invalid={(this.state.lastnameError)?true:false}  >{this.state.lastnameError}</FormFeedback>

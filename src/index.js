@@ -38,7 +38,10 @@ firebase.auth().onAuthStateChanged(function(user) {
 
     firebase.firestore().collection('users').doc(user.uid).get().then(function(doc) {
       if (doc.exists) {
-        userRecord = {...doc.data()};
+        userRecord = {
+          ...doc.data(),
+          id: doc.id
+        };
         ReactDOM.render(
           <Router>
             <Portal user={userRecord}/>

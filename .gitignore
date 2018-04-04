@@ -11,7 +11,7 @@ yarn.lock.lock
 coverage
 
 # production
-www
+
 
 # misc
 .DS_Store

@@ -19,8 +19,10 @@ class RegisterPage extends Component {
       firstname: 'Emmanuel',
       lastname: 'Benitez',
       address: '',
+      contact: '',
       type: 'Tutor',
       coordinates: {},
+      contactError: '',
       emailError: '',
       passwordError: '',
       confirmPasswordError: '',
@@ -37,6 +39,7 @@ class RegisterPage extends Component {
     this.handleLastnameChange = this.handleLastnameChange.bind(this);
     this.handleAddressChange = this.handleAddressChange.bind(this);
     this.handleTypeChange = this.handleTypeChange.bind(this);
+    this.handleContactChange = this.handleContactChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.registerUserAuth = this.registerUserAuth.bind(this);
     this.registerUserData = this.registerUserData.bind(this);
@@ -75,6 +78,9 @@ class RegisterPage extends Component {
   handleLastnameChange(event){
     this.setState({ lastname: event.target.value, lastnameError: ''});
   }
+  handleContactChange(event){
+    this.setState({ contact: event.target.value, contactError: ''});
+  }
   handleAddressChange(address){
     this.setState({ address: address, addressError: ''});
   }
@@ -91,10 +97,10 @@ class RegisterPage extends Component {
     if(!s.firstname) error.firstnameError = 'Fill the firstname field';
     if(!s.lastname) error.lastnameError = 'Fill the lastname field';
     if(!s.address) error.addressError = 'Fill the Address field';
+    if(!s.contact) error.contactError = 'Fill the Contact field';
     if(!s.type) error.typeError = 'Fill the user type field';
 
-    if(s.emailError||s.passwordError||s.confirmPasswordError||s.firstnameError
-      ||s.lastnameError||s.addressError||Object.getOwnPropertyNames(error).length !== 0){
+    if(Object.getOwnPropertyNames(error).length !== 0){
       this.setState({...error});
 
     }
@@ -102,7 +108,9 @@ class RegisterPage extends Component {
       geocodeByAddress(this.state.address)
         .then(results => getLatLng(results[0]))
         .then(latLng => {
-          this.setState({coordinates:latLng},()=>{this.registerUserAuth();});
+          this.setState({
+            coordinates:new firebase.firestore.GeoPoint(latLng.lat, latLng.lng)
+          },()=>{this.registerUserAuth();});
         })
         .catch(error => {
           this.setState({addressError:error});
@@ -116,7 +124,8 @@ class RegisterPage extends Component {
       address: this.state.address,
       coordinates: this.state.coordinates,
       firstname: this.state.firstname,
-      lastname: this.state.lastname
+      lastname: this.state.lastname,
+      contact: this.state.contact
     };
     this.firebase.firestore().collection('users').doc(uid).set(userData)
     .then(function(docRef) {
@@ -245,6 +254,17 @@ class RegisterPage extends Component {
                         value={this.state.lastname}
                         onChange={this.handleLastnameChange}/>
                       <FormFeedback invalid={(this.state.lastnameError)?true:false}  >{this.state.lastnameError}</FormFeedback>
+
+
+                    </FormGroup>
+                    <FormGroup>
+                      <Label for="exampleEmail">Contact Number</Label>
+
+
+                      <Input invalid={(this.state.contactError)?true:false} type="text" placeholder="Contact Number"
+                        value={this.state.contact}
+                        onChange={this.handleContactChange}/>
+                      <FormFeedback invalid={(this.state.contactError)?true:false}  >{this.state.contactError}</FormFeedback>
 
 
                     </FormGroup>

@@ -7,7 +7,7 @@
     <author email="emmanuelbenitez1996@gmail.com" href="#">
         BenGerLen
     </author>
-    <icon src="res/icon.png" />
+    <!-- <icon src="res/icon.png" /> -->
     <content src="index.html" />
     <preference name="DisallowOverscroll" value="true" />
     <preference name="android-minSdkVersion" value="14" />

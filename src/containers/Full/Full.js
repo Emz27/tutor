@@ -18,11 +18,14 @@ import {Profile as StudentProfile} from '../../views/Student/Profile.js';
 import {Schedule as StudentSchedule} from '../../views/Student/Schedule.js';
 import {Contracts as StudentContracts} from '../../views/Student/Contracts.js';
 
+import Notifications from 'react-notify-toast';
+
 class Full extends Component {
 
   render() {
     return (
       <div className="app">
+        <Notifications options={{zIndex: 5000}} />
         <Header user={this.props.user}/>
         <div className="app-body">
           <Sidebar {...this.props}/>

@@ -125,7 +125,10 @@ class RegisterPage extends Component {
       coordinates: this.state.coordinates,
       firstname: this.state.firstname,
       lastname: this.state.lastname,
-      contact: this.state.contact
+      contact: this.state.contact,
+      rating: 2.5,
+      subjects: {},
+      schedule: {}
     };
     this.firebase.firestore().collection('users').doc(uid).set(userData)
     .then(function(docRef) {

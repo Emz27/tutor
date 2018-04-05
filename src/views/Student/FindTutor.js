@@ -65,6 +65,8 @@ class FindTutor extends Component {
     this.setState({
       subjectCategory: event.target.value,
       subjectCategoryError: '',
+      subject: '',
+      subjectError: '',
       tutors: []
     });
   }

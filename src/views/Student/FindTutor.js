@@ -4,6 +4,8 @@ import { Button, FormText, FormFeedback,   FormGroup, Input, Row, Col, Card, Car
 
 import Rating from 'react-rating';
 
+import {notify} from 'react-notify-toast';
+
 import * as firebase from 'firebase';
 import 'firebase/firestore';
 
@@ -68,6 +70,31 @@ class FindTutor extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.fetchTutor = this.fetchTutor.bind(this);
     this.handleSort = this.handleNameSort.bind(this);
+    this.handleRequest = this.handleRequest.bind(this);
+    this.getSubject = this.getSubject.bind(this);
+  }
+  handleRequest(tutor){
+    var sched = {};
+    for(let i = this.state.startTime; i < this.state.endTime; i++ ){
+      sched[this.state.day] = {};
+      sched[this.state.day][this.time[i]] = {exist:true};
+    }
+    firebase.firestore().collection('contracts').add({
+      subject: this.getSubject(),
+      approved: false,
+      finished: false,
+      rate_per_hour: tutor.rate_per_hour,
+      schedule: sched,
+      student: this.props.user.id,
+      tutor: tutor.id
+    })
+    .then(()=>{
+      notify.show('Request Sent!', 'custom', 3000, { background: '#5cb85c', text: '#FFFFFF' });
+    })
+    .catch((error)=>{
+      notify.show('Request Failed to Send! : '+error, 'custom', 3000, { background: '	#d9534f', text: '#FFFFFF' });
+    });
+
   }
   handleNameSort(type){
     var sort = {
@@ -144,6 +171,12 @@ class FindTutor extends Component {
       this.fetchTutor();
     }
     event.preventDefault();
+  }
+  getSubject(){
+    var subCat = this.state.subjectCategories;
+    var subIndex = this.state.subject;
+    var catIndex = this.state.subjectCategory;
+    return subCat[catIndex].subjects[subIndex];
   }
   fetchTutor(){
     var rad = function(x) {
@@ -333,43 +366,47 @@ class FindTutor extends Component {
                   <th className="text-center" onClick={(event)=>this.handleSort('rate_per_hour')} ><i className="fa fa-tag"></i> {sortMark('rate_per_hour')} </th>
                   <th className="text-center" onClick={(event)=>this.handleSort('distance')} ><i className="fa fa-map-marker" ></i> {sortMark('distance')} </th>
                   <th className="text-center" onClick={(event)=>this.handleSort('rating')} ><i className="fa fa-star"></i> {sortMark('rating')} </th>
-                </tr>
+                  <th className="text-center"></th>
+              </tr>
                 </thead>
                 <tbody>
                   {
-                    this.state.tutors.map((item,index)=>{
+                    this.state.tutors.map((tutor,index)=>{
                       return (
-                        <tr key={item.id}>
-                          <td key={item.firstname+' '+item.lastname}>
-                            <div className="text-center">{item.firstname+' '+item.lastname}</div>
+                        <tr key={tutor.id}>
+                          <td key={tutor.firstname+' '+tutor.lastname}>
+                            <div className="text-center">{tutor.firstname+' '+tutor.lastname}</div>
                             <div className="small text-muted">
-                              <i className="fa fa-phone"></i> {item.contact}
+                              <i className="fa fa-phone"></i> {tutor.contact}
                             </div>
                             <div className="small text-muted">
-                              <i className="fa fa-envelope"></i> {item.email}
+                              <i className="fa fa-envelope"></i> {tutor.email}
                             </div>
                           </td>
                           <td className="text-center" key={'rate_per_hour'}>
                             <div><strong>P {
-                                item.subjects[this.state.subjectCategories[this.state.subjectCategory].subjects[this.state.subject]].rate_per_hour
+                                tutor.subjects[this.state.subjectCategories[this.state.subjectCategory].subjects[this.state.subject]].rate_per_hour
                               }</strong></div>
                             <div className="small text-muted">Rate per Hour</div>
                           </td>
                           <td className="text-center" key={'distance'}>
-                            <div><strong>{item.distance}</strong></div>
+                            <div><strong>{tutor.distance}</strong></div>
                             <div className="small text-muted">kilometer away</div>
-                            <div className="small text-muted">{item.address}</div>
+                            <div className="small text-muted">{tutor.address}</div>
                           </td>
                           <td className="text-center" key={'ratings'}>
-                            <div><strong>{item.rating}</strong></div>
+                            <div><strong>{tutor.rating}</strong></div>
                             <div className="small text-muted">
                               <Rating
                                 emptySymbol="fa fa-star-o medium"
                                 fullSymbol="fa fa-star medium"
-                                initialRating={item.rating}
+                                initialRating={tutor.rating}
                                 readonly
                               />
                             </div>
+                          </td>
+                          <td className="text-center">
+                            <Button color="primary" onClick={(event)=>this.handleRequest(tutor)}><i className="fa fa-share"></i> Send Request</Button>
                           </td>
                         </tr>
                       );

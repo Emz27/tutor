@@ -48,6 +48,7 @@ firebase.auth().onAuthStateChanged(function(user) {
           </Router>
           ,document.getElementById('root'));
       } else {
+        firebase.firestore().auth().signOut();
         console.log('No such document!');
       }
     }).catch(function(error) {

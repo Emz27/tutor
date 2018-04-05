@@ -112,12 +112,14 @@ class Subjects extends Component {
         rate_per_hour: this.state.ratePerHour,
         exist: true
       };
+      this.props.user.subjects = {...this.state.tutorSubjects,...obj};
       this.setState({tutorSubjects: {...this.state.tutorSubjects,...obj}});
     }
   }
   handleSubjectDelete(event,subject){
     var tutSub = Object.assign({},this.state.tutorSubjects);
     delete tutSub[subject];
+    this.props.user.subjects = tutSub;
     this.setState({
       tutorSubjects: tutSub
     });

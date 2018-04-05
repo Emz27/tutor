@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-class Profile extends Component {
+class Contracts extends Component {
 
   render() {
     return (
@@ -11,4 +11,4 @@ class Profile extends Component {
   }
 }
 
-export {Profile};
+export {Contracts};

@@ -85,7 +85,7 @@ class Subjects extends Component {
   }
   handleRatePerHourChange(event){
     this.setState({
-      ratePerHour: event.target.value,
+      ratePerHour: +event.target.value,
       ratePerHourError: ''
     });
   }

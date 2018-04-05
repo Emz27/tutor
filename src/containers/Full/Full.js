@@ -9,9 +9,9 @@ import Footer from '../../components/Footer/';
 
 import {Profile as TutorProfile} from '../../views/Tutor/Profile.js';
 import {Schedule as TutorSchedule} from '../../views/Tutor/Schedule.js';
-import {Schedule as TutorContracts} from '../../views/Tutor/Contracts.js';
-import {Schedule as TutorSubjects} from '../../views/Tutor/Subjects.js';
-import {Schedule as TutorRatings} from '../../views/Tutor/Ratings.js';
+import {Contracts as TutorContracts} from '../../views/Tutor/Contracts.js';
+import {Subjects as TutorSubjects} from '../../views/Tutor/Subjects.js';
+import {Ratings as TutorRatings} from '../../views/Tutor/Ratings.js';
 
 import {FindTutor} from '../../views/Student/FindTutor.js';
 import {Profile as StudentProfile} from '../../views/Student/Profile.js';

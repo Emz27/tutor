@@ -24,7 +24,11 @@ class FindTutor extends Component {
       dayError: '',
       startTimeError: '',
       endTimeError: '',
-
+      sort: {
+        distance: {asc: false, on: false},
+        rate_per_hour: {asc: false, on: false},
+        rating: {asc: false, on: false}
+      },
       tutors:[]
     };
     firebase.firestore().collection('categories').get()
@@ -60,6 +64,26 @@ class FindTutor extends Component {
     this.handleEndTimeChange = this.handleEndTimeChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.fetchTutor = this.fetchTutor.bind(this);
+    this.handleSort = this.handleNameSort.bind(this);
+  }
+  handleNameSort(type){
+    var sort = {
+      distance: {asc: false, on: false},
+      rate_per_hour: {asc: false, on: false},
+      rating: {asc: false, on: false}
+    };
+
+    sort[type].on = true;
+    sort[type].asc = !this.state.sort[type].asc;
+    var sorted = this.state.tutors.sort((a,b)=>{
+      if(sort[type].asc)return a[type]-b[type];
+      else return b[type]-a[type];
+    });
+
+    this.setState({
+      sort: sort,
+      tutors: sorted
+    });
   }
   handleSubjectCategoryChange(event){
     this.setState({
@@ -158,6 +182,8 @@ class FindTutor extends Component {
         tutorList.push({
           ...doc.data(),
           distance: getDistance(this.props.user.coordinates, doc.data().coordinates),
+          rate_per_hour: doc.data().subjects[subject].rate_per_hour,
+          rating: doc.data().rating,
           id: doc.id
         });
         console.dir(doc);
@@ -184,6 +210,13 @@ class FindTutor extends Component {
     if(input.startTimeError) startTimeErrorProp.invalid = true;
     if(input.endTimeError) endTimeErrorProp.invalid = true;
     if(input.dayError) dayErrorProp.invalid = true;
+
+    var sortMark = (type)=>{
+      if(this.state.sort[type].on){
+        if(this.state.sort[type].asc) return (<i className="fa fa-long-arrow-down pull-right"></i>);
+        else return (<i className="fa fa-long-arrow-up pull-right"></i>);
+      }
+    };
 
     return (
       <div className="animated fadeIn">
@@ -294,9 +327,9 @@ class FindTutor extends Component {
                 <thead className="thead-light">
                 <tr>
                   <th className="text-center"><i className="fa fa-user"></i></th>
-                  <th className="text-center"><i className="fa fa-tag"></i></th>
-                  <th className="text-center"><i className="fa fa-map-marker"></i></th>
-                  <th className="text-center"><i className="fa fa-star"></i></th>
+                  <th className="text-center" onClick={(event)=>this.handleSort('rate_per_hour')} ><i className="fa fa-tag"></i> {sortMark('rate_per_hour')} </th>
+                  <th className="text-center" onClick={(event)=>this.handleSort('distance')} ><i className="fa fa-map-marker" ></i> {sortMark('distance')} </th>
+                  <th className="text-center" onClick={(event)=>this.handleSort('rating')} ><i className="fa fa-star"></i> {sortMark('rating')} </th>
                 </tr>
                 </thead>
                 <tbody>
@@ -313,7 +346,7 @@ class FindTutor extends Component {
                               <i className="fa fa-envelope"></i> {item.email}
                             </div>
                           </td>
-                          <td className="text-center" key={'Price'}>
+                          <td className="text-center" key={'rate_per_hour'}>
                             <div><strong>P {
                                 item.subjects[this.state.subjectCategories[this.state.subjectCategory].subjects[this.state.subject]].rate_per_hour
                               }</strong></div>
@@ -322,6 +355,7 @@ class FindTutor extends Component {
                           <td className="text-center" key={'distance'}>
                             <div><strong>{item.distance}</strong></div>
                             <div className="small text-muted">kilometer away</div>
+                            <div className="small text-muted">{item.address}</div>
                           </td>
                           <td className="text-center" key={'ratings'}>
                             <div><strong>{item.rating}</strong></div>

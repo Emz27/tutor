@@ -25,7 +25,7 @@ class Schedule extends Component {
                 , '6:30 pm', '7:00 pm', '7:30 pm', '8:00 pm','8:30 pm'
                 , '9:00 pm','9:30 pm', '10:00 pm'];
 
-    firebase.firestore().collection('contracts').where('tutor','==','users/'+props.user.id).get()
+    firebase.firestore().collection('contracts').where('tutor','==',props.user.id).get()
     .then((querySnapshot)=>{
       let sched = {};
       querySnapshot.forEach((doc)=>{

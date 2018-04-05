@@ -13,14 +13,14 @@ class RegisterPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: 'emmanuelbenitez1996@gmail.com',
-      password: 'Eb123456789',
-      confirmPassword: 'Eb123456789',
-      firstname: 'Emmanuel',
-      lastname: 'Benitez',
+      email: '',
+      password: '',
+      confirmPassword: '',
+      firstname: '',
+      lastname: '',
       address: '',
       contact: '',
-      type: 'Tutor',
+      type: '',
       coordinates: {},
       contactError: '',
       emailError: '',

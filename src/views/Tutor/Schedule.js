@@ -24,6 +24,13 @@ class Schedule extends Component {
                 ,'3:30 pm', '4:00 pm','4:30 pm', '5:00 pm','5:30 pm', '6:00 pm'
                 , '6:30 pm', '7:00 pm', '7:30 pm', '8:00 pm','8:30 pm'
                 , '9:00 pm','9:30 pm', '10:00 pm'];
+    firebase.firestore().collection('users').doc(props.user.id).get()
+    .then((doc)=>{
+      this.setState({schedule: doc.data().schedule});
+    })
+    .catch((error)=>{
+      console.log(error);
+    });
 
     firebase.firestore().collection('contracts').where('tutor','==',props.user.id).get()
     .then((querySnapshot)=>{
@@ -59,7 +66,34 @@ class Schedule extends Component {
         }
       }
     }
-    this.setState({schedule: sched},()=>console.dir(this.state.schedule));
+    firebase.firestore().collection('users').doc(this.props.user.id).get()
+    .then((doc)=>{
+      var pass = true;
+      if(doc.data().schedule.hasOwnProperty(day)){
+
+        if(doc.data().schedule[day].hasOwnProperty(time)){
+
+          if(doc.data().schedule[day][time].available === false) pass = false;
+        }
+
+      }
+      if(pass){
+        // firebase.firestore().collection('users').doc(this.props.user.id).update({
+        //   schedule: sched
+        // })
+        // .then((doc)=>{
+        //   this.setState({schedule: sched});
+        // });
+        this.setState({schedule: sched});
+      }
+      else{
+        notify.show('Conflicting Schedule, Please refresh your browser', 'custom', 3000, { background: '	#d9534f', text: '#FFFFFF' });
+      }
+    })
+    .catch((error)=>{
+      console.log(error);
+    });
+
   }
   handleSubmit(event){
     console.log(this.props.user.id);

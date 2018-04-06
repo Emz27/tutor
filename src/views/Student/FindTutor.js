@@ -57,7 +57,7 @@ class FindTutor extends Component {
                       , 'Wednesday', 'Friday', 'Saturday'];
     this.time = ['6:00 am', '6:30 am', '7:00 am','7:30 am', '8:00 am'
                 ,'8:30 am', '9:00 am','9:30 am', '10:00 am','10:30 am'
-                , '11:00 am','11:30 am', '12:00 pm', '12:30 am'
+                , '11:00 am','11:30 am', '12:00 pm', '12:30 pm'
                 , '1:00 pm','1:30 pm', '2:00 pm','2:30 pm', '3:00 pm'
                 ,'3:30 pm', '4:00 pm','4:30 pm', '5:00 pm','5:30 pm', '6:00 pm'
                 , '6:30 pm', '7:00 pm', '7:30 pm', '8:00 pm','8:30 pm'
@@ -75,16 +75,22 @@ class FindTutor extends Component {
   }
   handleRequest(tutor){
     var sched = {};
-    for(let i = this.state.startTime; i < this.state.endTime; i++ ){
-      sched[this.state.day] = {};
+    sched[this.state.day] = {};
+    console.log('starttime',this.state.startTime);
+    console.log('endtime',this.state.endTime);
+    for(let i = +this.state.startTime; i < +this.state.endTime; i++ ){
+      console.log(this.time[i]);
       sched[this.state.day][this.time[i]] = {exist:true};
+
     }
+    console.dir(sched);
     firebase.firestore().collection('contracts').add({
       subject: this.getSubject(),
       approved: false,
       finished: false,
       rate_per_hour: tutor.rate_per_hour,
       schedule: sched,
+      rating:3,
       student: this.props.user.id,
       tutor: tutor.id
     })
@@ -225,11 +231,19 @@ class FindTutor extends Component {
         console.dir(doc);
       });
       console.dir(tutorList);
+      if(tutorList.length){
+        notify.show('Tutor Found!', 'custom', 3000, { background: '#5cb85c', text: '#FFFFFF' });
+      }
+      else {
+        notify.show('No Tutor Available!', 'custom', 3000, { background: '	#d9534f', text: '#FFFFFF' });
+      }
       this.setState({
         tutors: tutorList
       });
+
     })
     .catch((error)=>{
+
       console.log(error);
     });
   }

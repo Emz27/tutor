@@ -2,12 +2,13 @@ import React, { Component } from 'react';
 
 import { Button, FormText, FormFeedback,   FormGroup, Input, Row, Col, Card, CardBody, CardHeader, Table} from 'reactstrap';
 
-import Rating from 'react-rating';
 
 import {notify} from 'react-notify-toast';
 
 import * as firebase from 'firebase';
 import 'firebase/firestore';
+
+import {TutorItem} from './TutorItem.js';
 
 class FindTutor extends Component {
   constructor(props){
@@ -380,49 +381,17 @@ class FindTutor extends Component {
                   <th className="text-center" onClick={(event)=>this.handleSort('rate_per_hour')} ><i className="fa fa-tag"></i> {sortMark('rate_per_hour')} </th>
                   <th className="text-center" onClick={(event)=>this.handleSort('distance')} ><i className="fa fa-map-marker" ></i> {sortMark('distance')} </th>
                   <th className="text-center" onClick={(event)=>this.handleSort('rating')} ><i className="fa fa-star"></i> {sortMark('rating')} </th>
-                  <th className="text-center"></th>
               </tr>
                 </thead>
                 <tbody>
                   {
                     this.state.tutors.map((tutor,index)=>{
                       return (
-                        <tr key={tutor.id}>
-                          <td key={tutor.firstname+' '+tutor.lastname}>
-                            <div className="text-center">{tutor.firstname+' '+tutor.lastname}</div>
-                            <div className="small text-muted">
-                              <i className="fa fa-phone"></i> {tutor.contact}
-                            </div>
-                            <div className="small text-muted">
-                              <i className="fa fa-envelope"></i> {tutor.email}
-                            </div>
-                          </td>
-                          <td className="text-center" key={'rate_per_hour'}>
-                            <div><strong>P {
-                                tutor.subjects[this.state.subjectCategories[this.state.subjectCategory].subjects[this.state.subject]].rate_per_hour
-                              }</strong></div>
-                            <div className="small text-muted">Rate per Hour</div>
-                          </td>
-                          <td className="text-center" key={'distance'}>
-                            <div><strong>{tutor.distance}</strong></div>
-                            <div className="small text-muted">kilometer away</div>
-                            <div className="small text-muted">{tutor.address}</div>
-                          </td>
-                          <td className="text-center" key={'ratings'}>
-                            <div><strong>{tutor.rating}</strong></div>
-                            <div className="small text-muted">
-                              <Rating
-                                emptySymbol="fa fa-star-o medium"
-                                fullSymbol="fa fa-star medium"
-                                initialRating={tutor.rating}
-                                readonly
-                              />
-                            </div>
-                          </td>
-                          <td className="text-center">
-                            <Button color="primary" onClick={(event)=>this.handleRequest(tutor)}><i className="fa fa-share"></i> Send Request</Button>
-                          </td>
-                        </tr>
+                        <TutorItem 
+                        key={tutor.id} 
+                        handleRequest={this.handleRequest} 
+                        tutor={tutor}
+                        subject={this.state.subjectCategories[this.state.subjectCategory].subjects[this.state.subject]}  />
                       );
                     })
                   }

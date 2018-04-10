@@ -66,7 +66,7 @@ class TutorItem extends Component {
     };
     var SchedTable = ()=>{
       return (
-        <table responsive bordered>
+        <table>
           <thead><tr><th>Time</th><th>Day</th></tr></thead>
           <tbody>
             {
@@ -88,7 +88,7 @@ class TutorItem extends Component {
     
     return (
               <tr key={this.props.tutor.id}>
-                <td>
+                <td style={{maxWidth:275,width: 275, minWidth:275}}>
                     <div><h5>{this.props.tutor.firstname+' '+this.props.tutor.lastname}</h5></div>
                     <hr/>
                     <br/>
@@ -146,7 +146,13 @@ class TutorItem extends Component {
                             </TabContent>
                     </div>
                     <td>
-                      <Button color="primary" onClick={(event)=>this.props.handleRequest(this.props.tutor)}><i className="fa fa-share"></i> Send Request</Button>
+                      {
+                        (this.props.day)
+                        ?<Button color="primary" onClick={(event)=>this.props.handleRequest(this.props.tutor)}><i className="fa fa-share"></i> Send Request</Button>
+                        :<Button disabled={true} color="primary" onClick={(event)=>this.props.handleRequest(this.props.tutor)}><i className="fa fa-share"></i> Send Request</Button>
+
+                      }
+                      
                     </td>
                 </td>
                 <td className="text-center" key={'rate_per_hour'}>

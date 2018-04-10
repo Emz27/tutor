@@ -39,9 +39,28 @@ class FindTutor extends Component {
       let subjectCategories = [];
       querySnapshot.forEach((doc)=>{
             // doc.data() is never undefined for query doc snapshots
+        var category = doc.data().name;
+        var subjects = [];
+        firebase.firestore().collection('users')
+        .where('type','==','Tutor')
+        .get()
+        .then((querySnapshot1)=>{
+          
+          querySnapshot1.forEach(doc1 => {
+            var tutor = doc1.data();
+
+            Object.getOwnPropertyNames(tutor.subjects).forEach((subject)=>{
+              if(subjects.indexOf(subject) === -1 && tutor.subjects[subject].category === category ){
+                subjects.push(subject);
+              }
+            });
+          
+          });
+          
+        });
         subjectCategories.push({
           name: doc.data().name,
-          subjects: Object.getOwnPropertyNames(doc.data().subjects),
+          subjects: subjects,
           id: doc.id
         });
       });
@@ -166,9 +185,14 @@ class FindTutor extends Component {
     var error ={};
     if(!s.subject) error.subjectError = 'Fill the subject field';
     if(!s.subjectCategory) error.subjectCategoryError = 'Fill the subject category field';
-    if(s.startTime==='-1') error.startTimeError = 'Fill the start time field';
-    if(s.endTime==='-1') error.endTimeError = 'Fill the end time field';
-    if(!s.day) error.dayError = 'Fill the day field';
+    if(s.startTime >=0 || s.endTime >= 0 || s.day){
+      if(s.startTime==='-1') error.startTimeError = 'Fill the start time field';
+      if(s.endTime==='-1') error.endTimeError = 'Fill the end time field';
+      if(!s.day) error.dayError = 'Fill the day field';
+    }
+    
+
+    
 
     if(Object.getOwnPropertyNames(error).length !== 0){
       this.setState({...error});
@@ -215,10 +239,12 @@ class FindTutor extends Component {
     query = query.where('subjects.'+subject+'.exist','==',true);
     query = query.where('type','==','Tutor');
 
-    for(let i = this.state.startTime; i < this.state.endTime; i++ ){
-      query = query.where('schedule.'+this.state.day+'.'+this.time[i]+'.available','==',true);
+    if(this.state.startTime >=0 && this.state.startTime >=0 && this.state.day){
+      for(let i = this.state.startTime; i < this.state.endTime; i++ ){
+        query = query.where('schedule.'+this.state.day+'.'+this.time[i]+'.available','==',true);
+      }
     }
-
+    
     query = query.get();
     query.then((querySnapshot)=>{
       querySnapshot.forEach((doc)=>{
@@ -374,7 +400,7 @@ class FindTutor extends Component {
 
                 </Col>
               </Row>
-              <Table hover responsive className="table-outline mb-0">
+              <Table responsive className="table-outline mb-0">
                 <thead className="thead-light">
                 <tr>
                   <th className="text-center"><i className="fa fa-user"></i></th>
@@ -391,6 +417,9 @@ class FindTutor extends Component {
                         key={tutor.id} 
                         handleRequest={this.handleRequest} 
                         tutor={tutor}
+                        day={this.state.day}
+                        startTime={this.state.startTime}
+                        endTime={this.state.endTime}
                         subject={this.state.subjectCategories[this.state.subjectCategory].subjects[this.state.subject]}  />
                       );
                     })

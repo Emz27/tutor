@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-
 import {Col, Card, CardHeader, Row,CardBody, FormGroup, Input, FormFeedback, Table, FormText, Button} from 'reactstrap';
-
 import {notify} from 'react-notify-toast';
-
+import 'react-select/dist/react-select.css';
+import Select from 'react-select';
 import * as firebase from 'firebase';
 import 'firebase/firestore';
 
@@ -29,9 +28,28 @@ class Subjects extends Component {
       let subjectCategories = [];
       querySnapshot.forEach((doc)=>{
             // doc.data() is never undefined for query doc snapshots
+        var category = doc.data().name;
+        var subjects = [];
+        firebase.firestore().collection('users')
+        .where('type','==','Tutor')
+        .get()
+        .then((querySnapshot1)=>{
+          
+          querySnapshot1.forEach(doc1 => {
+            var tutor = doc1.data();
+
+            Object.getOwnPropertyNames(tutor.subjects).forEach((subject)=>{
+              if(subjects.indexOf(subject) === -1 && tutor.subjects[subject].category === category ){
+                subjects.push(subject);
+              }
+            });
+          
+          });
+          
+        });
         subjectCategories.push({
           name: doc.data().name,
-          subjects: Object.getOwnPropertyNames(doc.data().subjects),
+          subjects: subjects,
           id: doc.id
         });
       });
@@ -77,11 +95,19 @@ class Subjects extends Component {
       subjectCategoryError: ''
     });
   }
-  handleSubjectChange(event){
-    this.setState({
-      subject: event.target.value,
-      subjectError: ''
-    });
+  handleSubjectChange(selected){
+    if(selected != null){
+      console.log('subject changed');
+      console.log(this.state.subject);
+      console.log(selected.value);
+      this.setState({
+        subject: selected.value,
+        subjectError: ''
+      },(state)=>{
+        console.log(this.state.subject);
+      });
+    }
+    else this.setState({subject: '',subjectError: ''});
   }
   handleRatePerHourChange(event){
     this.setState({
@@ -92,7 +118,7 @@ class Subjects extends Component {
   handleSubjectAdd(event){
     var s = this.state;
     var error ={};
-
+    console.log(s.subject);
     if(!s.subject) error.subjectError = 'Fill the subject field';
     if(!s.subjectCategory) error.subjectCategoryError = 'Fill the subject category field';
     if(!s.ratePerHour) error.ratePerHourError = 'Fill the rate per hour field';
@@ -106,7 +132,7 @@ class Subjects extends Component {
       var subCat = this.state.subjectCategories;
       var subIndex = this.state.subject;
       var catIndex = this.state.subjectCategory;
-      var subject = subCat[catIndex].subjects[subIndex];
+      var subject = this.state.subject;
       obj[subject] = {
         category: subCat[catIndex].name,
         rate_per_hour: this.state.ratePerHour,
@@ -144,8 +170,15 @@ class Subjects extends Component {
     var subjectErrorProp = {};
     var subjectCategoryErrorProp = {};
     var ratePerHourErrorProp = {};
+    var selectProp = {disabled : true};
 
+    if(this.state.subjectCategory){
+      selectProp.options = this.state.subjectCategories[this.state.subjectCategory].subjects.map((item)=>{
+        return {value: item, label: item};
+      });
+      selectProp.disabled = false;
 
+    }
     if(input.subjectError) subjectErrorProp.invalid = true;
     if(input.subjectCategoryError) subjectCategoryErrorProp.invalid = true;
     if(input.ratePerHourError) ratePerHourErrorProp.invalid = true;
@@ -178,19 +211,12 @@ class Subjects extends Component {
                           <FormText className="text-center">Subject Category</FormText>
                         </Col>
                         <Col md="4">
-                          <Input {...subjectErrorProp} type="select" value={this.state.subject}
-                            onChange={this.handleSubjectChange}>
-                            <option></option>
-                            {
-                              (this.state.subjectCategory)?(
-                                this.state.subjectCategories[this.state.subjectCategory].subjects.map((data,index)=>{
-                                  return (
-                                    <option key={index} value={index}>{data}</option>
-                                  );
-                                })
-                              ):(<option></option>)
-                            }
-                          </Input>
+                          <Select.Creatable
+                            {...selectProp}
+                            onChange={this.handleSubjectChange}
+                            value={{value: this.state.subject, label:this.state.subject}}
+                          />
+                          
                           <FormFeedback {...subjectErrorProp} >{this.state.subjectError}</FormFeedback>
                           <FormText className="text-center">Subject</FormText>
                         </Col>

@@ -17,14 +17,9 @@ export default {
         icon: 'icon-book-open'
       },
       {
-        name: 'Contracts',
+        name: 'Agreements',
         url: '/contracts',
         icon: 'icon-layers'
-      },
-      {
-        name: 'Ratings',
-        url: '/ratings',
-        icon: 'icon-trophy'
       }
 
     ]
@@ -37,17 +32,7 @@ export default {
         icon: 'icon-magnifier'
       },
       {
-        name: 'Profile',
-        url: '/profile',
-        icon: 'icon-user'
-      },
-      {
-        name: 'Schedule',
-        url: '/schedule',
-        icon: 'icon-calendar'
-      },
-      {
-        name: 'Contracts',
+        name: 'Agreements',
         url: '/contracts',
         icon: 'icon-note'
       }

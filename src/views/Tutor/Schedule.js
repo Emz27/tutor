@@ -111,8 +111,8 @@ class Schedule extends Component {
   }
   render() {
     var tableData = (timeIndex,day)=>{
-      var availableClass = 'switch switch-icon switch-pill switch-primary';
-      var unavailableClass = 'switch switch-icon switch-pill switch-primary-outline';
+      var availableClass = 'switch switch-lg switch-icon switch-pill switch-primary';
+      var unavailableClass = 'switch switch-lg switch-icon switch-pill switch-primary-outline';
       var switchClass = unavailableClass;
       var switchProps = {};
 

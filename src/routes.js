@@ -3,7 +3,6 @@ const routes = {
   '/find_tutor': 'Find Tutor',
   '/schedule': 'Schedule',
   '/subjects': 'Subjects',
-  '/contracts': 'Contracts',
-  '/ratings': 'Ratings'
+  '/contracts': 'Agreement'
 };
 export default routes;

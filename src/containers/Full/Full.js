@@ -14,7 +14,6 @@ import {Subjects as TutorSubjects} from '../../views/Tutor/Subjects.js';
 import {Ratings as TutorRatings} from '../../views/Tutor/Ratings.js';
 
 import {FindTutor} from '../../views/Student/FindTutor.js';
-import {Profile as StudentProfile} from '../../views/Student/Profile.js';
 import {Schedule as StudentSchedule} from '../../views/Student/Schedule.js';
 import {Contracts as StudentContracts} from '../../views/Student/Contracts.js';
 
@@ -45,10 +44,9 @@ class Full extends Component {
                 :
                 <Switch>
                   <Route path="/find_tutor" name="Find Tutor" render={()=><FindTutor user={this.props.user}/>}/>
-                  <Route path="/profile" name="Profile" render={()=><StudentProfile user={this.props.user}/>}/>
                   <Route path="/schedule" name="Schedule" render={()=><StudentSchedule user={this.props.user}/>}/>
-                  <Route path="/contracts" name="Contracts" render={()=><StudentContracts user={this.props.user}/>}/>
-                  <Redirect from="/" to="/profile"/>
+                  <Route path="/contracts" name="Agreements" render={()=><StudentContracts user={this.props.user}/>}/>
+                  <Redirect from="/" to="/find_tutor"/>
                 </Switch>
               }
             </Container>

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Button, Table, TabContent, TabPane, Nav, NavItem, NavLink} from 'reactstrap';
+import {Button, TabContent, TabPane, Nav, NavItem, NavLink} from 'reactstrap';
 import classnames from 'classnames';
 
 import Rating from 'react-rating';
@@ -145,15 +145,10 @@ class TutorItem extends Component {
                             </TabPane>
                             </TabContent>
                     </div>
-                    <td>
-                      {
-                        (this.props.day)
-                        ?<Button color="primary" onClick={(event)=>this.props.handleRequest(this.props.tutor)}><i className="fa fa-share"></i> Send Request</Button>
-                        :<Button disabled={true} color="primary" onClick={(event)=>this.props.handleRequest(this.props.tutor)}><i className="fa fa-share"></i> Send Request</Button>
-
-                      }
-                      
-                    </td>
+                    <div>
+                      <hr />
+                      <Button color="primary" onClick={(event)=>this.props.handleRequest(this.props.tutor)}><i className="fa fa-share"></i> Send Request</Button>
+                    </div>
                 </td>
                 <td className="text-center" key={'rate_per_hour'}>
                   <div><strong>P {

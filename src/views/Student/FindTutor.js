@@ -41,10 +41,9 @@ class FindTutor extends Component {
             // doc.data() is never undefined for query doc snapshots
         var category = doc.data().name;
         var subjects = [];
-        firebase.firestore().collection('users')
+        this.subjectListener = firebase.firestore().collection('users')
         .where('type','==','Tutor')
-        .get()
-        .then((querySnapshot1)=>{
+        .onSnapshot((querySnapshot1)=>{
           
           querySnapshot1.forEach(doc1 => {
             var tutor = doc1.data();
@@ -93,33 +92,49 @@ class FindTutor extends Component {
     this.handleRequest = this.handleRequest.bind(this);
     this.getSubject = this.getSubject.bind(this);
   }
-  handleRequest(tutor){
-    var sched = {};
-    sched[this.state.day] = {};
-    console.log('starttime',this.state.startTime);
-    console.log('endtime',this.state.endTime);
-    for(let i = +this.state.startTime; i < +this.state.endTime; i++ ){
-      console.log(this.time[i]);
-      sched[this.state.day][this.time[i]] = {exist:true};
+  componentDidMount() {
 
+  }
+  componentWillUnmount() {
+    this.subjectListener = firebase.firestore().collection('users')
+    .where('type','==','Tutor')
+    .onSnapshot(function () {});
+    this.subjectListener();
+  }
+  handleRequest(tutor){
+    if(this.state.day){
+      var sched = {};
+      sched[this.state.day] = {};
+      console.log('starttime',this.state.startTime);
+      console.log('endtime',this.state.endTime);
+      for(let i = +this.state.startTime; i < +this.state.endTime; i++ ){
+        console.log(this.time[i]);
+        sched[this.state.day][this.time[i]] = {exist:true};
+
+      }
+      console.dir(sched);
+      firebase.firestore().collection('contracts').add({
+        subject: this.getSubject(),
+        approved: false,
+        finished: false,
+        rate_per_hour: tutor.rate_per_hour,
+        schedule: sched,
+        rating:0,
+        student: this.props.user.id,
+        tutor: tutor.id,
+        distance: tutor.distance
+      })
+      .then(()=>{
+        notify.show('Request Sent!', 'custom', 3000, { background: '#5cb85c', text: '#FFFFFF' });
+      })
+      .catch((error)=>{
+        notify.show('Request Failed to Send! : '+error, 'custom', 3000, { background: '	#d9534f', text: '#FFFFFF' });
+      });
     }
-    console.dir(sched);
-    firebase.firestore().collection('contracts').add({
-      subject: this.getSubject(),
-      approved: false,
-      finished: false,
-      rate_per_hour: tutor.rate_per_hour,
-      schedule: sched,
-      rating:3,
-      student: this.props.user.id,
-      tutor: tutor.id
-    })
-    .then(()=>{
-      notify.show('Request Sent!', 'custom', 3000, { background: '#5cb85c', text: '#FFFFFF' });
-    })
-    .catch((error)=>{
-      notify.show('Request Failed to Send! : '+error, 'custom', 3000, { background: '	#d9534f', text: '#FFFFFF' });
-    });
+    else{
+      notify.show('Please Fill the day and time field if you want to send a request to this tutor', 'custom', 3000, { background: '	#d9534f', text: '#FFFFFF' });
+    }
+    
 
   }
   handleNameSort(type){
@@ -391,7 +406,7 @@ class FindTutor extends Component {
                     </FormGroup>
                     <FormGroup row>
                       <Col md="12">
-
+                            
                             <Button color="primary" onClick={this.handleSubmit}><i className="fa fa-search"></i> Search</Button>
 
                       </Col>

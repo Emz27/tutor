@@ -55,7 +55,7 @@ class FindTutor extends Component {
             });
           
           });
-          
+          this.render();
         });
         subjectCategories.push({
           name: doc.data().name,
@@ -73,7 +73,7 @@ class FindTutor extends Component {
     this.days = {};
     this.time = {};
     this.days = ['Sunday', 'Monday', 'Tuesday'
-                      , 'Wednesday', 'Friday', 'Saturday'];
+                      , 'Wednesday','Thursday', 'Friday', 'Saturday'];
     this.time = ['6:00 am', '6:30 am', '7:00 am','7:30 am', '8:00 am'
                 ,'8:30 am', '9:00 am','9:30 am', '10:00 am','10:30 am'
                 , '11:00 am','11:30 am', '12:00 pm', '12:30 pm'

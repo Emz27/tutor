@@ -69,7 +69,7 @@ class ContractItem extends Component {
     var SchedTable = ()=>{
       return (
         <table>
-          <thead><tr><th>Time</th><th>Day</th></tr></thead>
+          <thead><tr><th>Day</th><th>Time</th></tr></thead>
           <tbody>
             {
               Object.getOwnPropertyNames(this.props.tutor.schedule).map((item,index)=>{
